@@ -1,0 +1,74 @@
+Gitコマンド
+https://ms-engineerjp.udemy.com/course/unscared_git/learn/lecture/6680218?learning_path_id=3350656#overview
+
+参考　サル先生のGit入門
+https://backlog.com/ja/git-tutorial/
+
+// list -all 全てのファイルを表示
+ls -a
+
+// change directory ディレクトリに移動
+cd .. // ひとつ上位へ移動
+cd git_tutolial // 指定のディレクトリへ移動
+
+// ファイルをステージに追加
+git add . // 全てのファイルをステージに追加
+git add index.html // 指定ファイルを
+
+// commitの状態を確認
+git status
+
+// ステージからリポジトリにcommitを追加
+git commit
+
+// 差分を表示？
+git diff // ワークツリーとステージの差分
+git diff --staged // ステージとリポジトリの差分
+
+// commit ログを表示
+git log
+git log --oneline // 1行で表示
+git log --n // 直近の n 個分のみ表示
+
+// remove ファイルを削除
+git rm index.html
+// commitのみ削除、ファイルは削除されない
+git rm -cached index.html
+
+// 削除したファイルを復活
+git reset HEAD index.html
+
+// move ファイル名の変更
+git mv index.html index2.html // 変更前 変更後
+
+// GitHubのリポジトリに連携
+git remote add origin https://github.com/Haruko-Fujita/git_tutorial.git
+// GitHubのmaster branchに追加
+git push -u origin master
+
+// 
+git checkout idex.html
+
+// 
+git branch
+
+// エイリアス登録 global環境のcommitコマンドをcoに変更
+git config --global alias.co commit
+
+//エイリアス削除
+git config --global --unset alias.co
+
+.gitignoreファイルの書き方
+# comment
+
+# 指定したファイルを除外
+index.html
+# ルートディレクトリを指定
+/root.html
+# ディレクトリ以下を除外
+dir/
+# /以外の文字列にmuch *ワイルドカード 一つ下のディレクトリを除外
+/*/*.css
+
+// 空ファイルを作成
+touch secret.txt
