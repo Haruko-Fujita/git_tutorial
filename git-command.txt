@@ -1,0 +1,144 @@
+Gitコマンド
+https://ms-engineerjp.udemy.com/course/unscared_git/learn/lecture/6680218?learning_path_id=3350656#overview
+
+参考　サル先生のGit入門
+https://backlog.com/ja/git-tutorial/
+
+ls -a // list -all 全てのファイルを表示
+
+cd .. // change directory ひとつ上位のディレクトリに移動
+cd git_tutorial // 指定のディレクトリ(git_tutorial)へ移動
+
+touch index.html // file(index.html)をを新規作成　※git bashのコマンド　pwshではエラーになる。
+cat home.html //  file(home.html)の中身を表示する cat->concat: 連結する
+
+git add . // 全てのファイルをステージに追加
+git add index.html // 指定ファイル(index.html)をステージに追加
+
+git status // commitの状態を確認
+
+git commit // ステージからリポジトリにcommitを追加
+git commit -v // verbose 変更した詳細を確認してcommitする
+git commit -m ”commit message”// messageを書いてcommitする(エディタを開かないで済む)
+git commit --amend // ※直前のcommitをやり直す。ローカルリポジトリの直前のコミットをステージに上書きすることでcommitを元に戻す。
+// ※リモートリポジトリにpush後はNG。GitHubとcommit履歴が異なりpushできなくなるため。
+// amend:（重要度が高い）変更を行う
+
+git tag // タグの情報を表示
+git tag -l "201705" // 指定の名前(201705)を含むタグを表示
+git tag -a "20170520_01" -m "version 20170520_01" // タグを作成。名前(20170520_01)、署名、コメント(version 20170520_01)を付けられる
+// annoteted: 注釈付き、-mがない場合はeditorが起動しコメントを記入する。
+git tag 20170520_01 // 軽量版、タグを作成。名前(20170520_01)のみ付けられる。
+git tag 20170520_01 8a6cbc4 // commit(8a6cbc4)にタグ(20170520_01)を付ける。
+git show 20170520_01 // タグ(20170520_01)が付いているcommitを表示する(署名、日時、注釈、commit)
+
+git stash // ワークツリーとステージの変更を一時避難して、変更を無かったことにする。git statusで確認できる。
+git stash save // stash: 隠す save無しと同じ
+git stash list // stashした作業一覧を表示する
+git stash apply // stashした最新の作業を復元する。apply: 適用する。※ステージの状況は復元されない。
+git stash apply --index // stashした作業をステージの状況も含めて復元する
+git stash apply stash@{1} // 指定のstash(stash@{1})を復元する
+git stash drop // 最新のstashした作業を削除する
+git stash drop stash@{1} // 指定のstash(stash@{1})を削除する
+git stash clear // 全てのstashを削除する
+
+git diff // ワークツリーとステージの差分を表示する
+git diff --staged // ステージとリポジトリの差分を表示する
+
+git log // commit ログを表示
+git log --oneline // 1行で表示
+git log --oneline --decorate // どのbranchがどのcommitを指しているか表示する
+git log --n // 直近の n 個分のみ表示
+git log -p -n 1 //直前の1個のcommitのログを表示
+
+git rm index.html // remove ファイルを削除
+git rm --cached index.html // commitのみ削除、ファイルは削除されない
+
+//git addでステージした変更を取り消す(ステージから削除) -> ワークツリーはそのまま
+git reset HEAD // 全変更を取り消す
+git reset HEAD index.html // 指定したファイル(index.html)
+git reset HEAD git_tutorial // 指定したディレクトリ(git_tutorial)
+
+git checkout feature // branch(feature)に切り替える(HEADが移動する)
+git checkout -b new_branch // new_branchを作成して、切り替える(HAEDが移動する)
+git checkout --index.html // file(index.html)への変更を取り消す
+git checkout --git_tutorial // directory(git_tutorial)への変更を取り消す
+git checkout -- . // all
+git checkout remotes/origin/master // master branchにワークツリーの内容を切り替える
+// "--"はbranch名とfile名が同じ時にGitが分からなくなるのを避けるため
+
+git mv index.html index2.html // move ファイル名の変更 変更前(index.html) 変更後(index2.html)
+// 以下のコマンドと同じ
+mv old-file new-file
+git rm old-filefit
+add new-file
+
+// エイリアス登録
+git config --global alias.co commit // global環境の"commit"コマンドを"co"に変更
+git config --global --unset alias.co //エイリアス"co"を削除
+// --global PC全体の設定になる。PJ単位で変更したい場合は使わない。
+
+// ---GitHubのリモートリポジトリと連携---
+
+// remote  リモートリポジトリ関連の操作
+git remote // リモートリポジトリの情報を表示する -> origin
+git remote -v // リモートリポジトリのURLを表示する -> fetch URL & push URL
+git remote show origin // リモートリポジトリ(origin)の詳細を表示する
+git remote rename tutorial new_tutorial // リモートリポジトリ名を変更するold(tutorial) new(new_tutorial)
+git remote rm new_tutorial // リモートリポジトリ(new_tutorial)を削除する
+
+git remote add origin https://github.com/Haruko-Fujita/git_tutorial.git
+//  リモート名(origin)をリモートリポジトリ(URL)に新規追加する
+
+git push origin master // originをmaster branchに追加
+git push -u origin master // リモートリポジトリ(name:origin)をリモートリポジトリのbranch(name:master)に追加
+git push origin 20220824 // tag(20220824)をGitHub(リモートリポジトリorigin)に送信
+git push origin --tags // ローカルにあってGitHubにないタグを一斉送信
+
+git pull origin master // リモートリポジトリ(origin)から情報を取得してmaster branch(現在のbranch*)にmargeする
+git pull // origin(リモート名) master(branch名)は省略可能
+// git pull = git fetch* + git merge**
+// *  git fetch: リモートリポジトリからローカルリポジトリへ情報取得
+// ** git merge: ローカルリポジトリからワークツリーへ情報取得。履歴が残る。
+git pull --rebase origin master // GitHubの情報取得のみ。最新情報の取得などmerge commitの履歴が不要な時に使う。
+// git pull --rebase = git fetch + git rebase***
+// *** git rebase: ローカルリポジトリからワークツリーへ情報取得。merge commitの履歴が残らない。
+
+// Gitは別のbranchで並行して作業可能、リポジトリに保存されている
+// branch は最新のcommit IDを指すポインタ(commitはスナップショットを指す、履歴がつながっている)
+// HEAD は今作業中の branch を指すポインタ
+
+git branch // 現在のbranchの情報を表示する
+git branch -a // 全てのbranchを表示 -> *現在のbranch
+git branch feature // branch(feature)の新規作成、HEADは切り替わらない
+git branch -m new_branch // move:変更する 作業中のbranch*名をnew_branchに変更する
+git branch -d feature // delete:削除する feature branchを削除する、master branchにmergeされていない変更がある場合は削除されない。
+git branch -D feature // 強制削除 masterにmergeされていない変更が残っている場合は削除NG
+
+// fetch: 行って取ってくる
+git fetch origin // リモートリポジトリ(name:origin)からローカルリポジトリに情報を取ってくる
+-> ローカルのbranch名はremotes/origin/featureになる。この後git mergeする時はorigin/featureでbranchを指定できる。
+
+// リモートリポジトリからローカルリポジトリに、情報をfetchして、ワークツリーにmergeする
+git merge master // 作業中のbranch* に指定のブランチ(master)をmargeする
+git merge origin/master // リモートリポジトリoriginのmaster branchから作業中のbranch*にmergeする
+// Fast forward: branchが枝分かれしておらず、ポインタを前に進めるだけ。commitは新規で作られない。commit fileの親は１つ。
+// Auto merge: 枝分かれしたbranchを1つのbranchにmergeする。merge commitが新規作成される。commit fileの親は２つ。履歴は枝分かれしている。
+
+git rebase feature // feature branchのcommitをmaster branchの前に移動させる。枝分かれしたfeature branchは削除される
+(feature branchの親commitはmaster branch)
+// ex
+git checkout feature // 作業中のbranch*をfeature branchに変更する
+git rebase master // feature branchをmaster branchとmergeして、master branchの枝でcommitする。履歴は1直線になる。
+// 枝分かれした元のfeature branchは削除される。feature branchの親commitはmasterになる。
+git checkout master // 作業中のbranch*をmaster branchに変更する
+git merge feature // Fast-forward
+// ※GitHubにpushしたcommitをrebase(違うbranchにmerge)するのはNG。
+//   GitHubにpush出来なくなる。commit履歴が異なるのでgit pushがエラーになる。その場合はmergeを使う。
+git rebase -i commitID // 複数のcommitをやり直す。
+// -interractive 対話型rebase
+// git commit --amendは一つのcommitやり直し。
+git rebase -i HEAD~3 // 3つのcommitが表示される。
+// やり直したいcommitの pick -> editに書き換える
+git commit --amend // editにしたcommitをやり直す
+git rebase --continue // rebase完了。次のコミットへ進む。
